@@ -68,6 +68,9 @@ const HandbookCodePage = () => {
       <StatusBar backgroundColor="#142e67" />
       <View className="flex-1 gap-8 bg-[#142e67] items-center justify-center">
         <View className="p-4 bg-white w-10/12 min-h-20 shadow border border-gray-100 rounded ">
+          <View>
+            <Text>{process.env.EXPO_PUBLIC_API_URL}</Text>
+          </View>
           <View className="w-full items-center">
             <Image
               source={require("../assets/images/eg_logo.png")}

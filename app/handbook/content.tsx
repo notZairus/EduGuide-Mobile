@@ -4,11 +4,47 @@ import { Input, InputField } from "@/components/ui/input";
 import { useHandbook } from "@/hooks/use-handbook";
 import { isDarkColor } from "@/utils/helper";
 import { Link } from "expo-router";
-import React from "react";
-import { Image, ScrollView, Text, View } from "react-native";
+import React, { useEffect } from "react";
+import { Image, Pressable, ScrollView, Text, View } from "react-native";
+
+type TopicWithImage = {
+  firstImage: string | null;
+} & Topic;
 
 const Main = () => {
   const { handbook } = useHandbook();
+  const [topicsToRender, setTopicsToRender] = React.useState<
+    (TopicWithImage | Topic)[] | null
+  >(null);
+
+  useEffect(() => {
+    const filteredTopics =
+      handbook?.topics.filter((t) => t.sections.length > 0) || [];
+    const topicsWithSectionImage = filteredTopics.map((t) => {
+      let firstImage = null;
+
+      for (const section of t.sections) {
+        if (section.medias) {
+          for (const media of section.medias) {
+            if (media.type === "image") {
+              firstImage = media.url;
+              break; // breaks out of the inner loop
+            }
+          }
+        }
+        if (firstImage) break; // breaks out of the outer loop once an image is found
+      }
+
+      if (!firstImage) return t;
+
+      return {
+        ...t,
+        firstImage,
+      };
+    });
+
+    setTopicsToRender(topicsWithSectionImage);
+  }, [setTopicsToRender, handbook]);
 
   return (
     <View className="flex-1 px-8 pt-4 bg-white">
@@ -63,63 +99,91 @@ const Main = () => {
       </View>
 
       {/* Content */}
-      <ScrollView className="flex-1 mt-4">
-        {handbook?.topics
-          .filter((t) => t.sections.length > 0)
-          .map((topic) => (
-            <Link
-              href={`/topic/${topic._id}`}
-              key={topic._id}
-              style={{
-                backgroundColor: handbook?.color,
-                borderColor: handbook?.color,
-                borderWidth: 1,
-              }}
-              className="rounded-lg mt-4  shadow-md p-4"
-            >
-              <View className="w-full bg-transparent">
-                <Text
-                  className="text-2xl font-semibold"
-                  style={{
-                    color: isDarkColor(handbook?.color as string)
-                      ? "#FFFFFF"
-                      : "#000000",
-                  }}
-                >
-                  {topic.title}
-                </Text>
-
-                {topic.sections.length > 0 && (
-                  <>
-                    <Divider
-                      style={{
-                        backgroundColor: isDarkColor(handbook?.color as string)
-                          ? "#FFFFFF70"
-                          : "#00000070",
-                      }}
-                      className="my-2"
+      <ScrollView className="flex-1 mt-4 ">
+        {topicsToRender?.map((topic) => (
+          <Link key={topic._id} href={`/topic/${topic._id}`} asChild>
+            <Pressable>
+              <View
+                style={{
+                  backgroundColor: handbook?.color,
+                  boxShadow: "0px 8px 12px rgba(0, 0, 0, 0.2)",
+                }}
+                className="w-full pb-4 rounded"
+              >
+                {"firstImage" in topic && topic.firstImage && (
+                  <View className="p-1">
+                    <Image
+                      source={{ uri: topic.firstImage }}
+                      className="w-full h-40"
+                      resizeMode="cover"
                     />
-                    <View className="ml-2 mb-4 gap-1">
-                      {topic.sections.slice(0, 3).map((section) => (
+                  </View>
+                )}
+                <View className="px-4">
+                  <View className="mt-2">
+                    <Text
+                      style={{
+                        color: isDarkColor(handbook?.color as string)
+                          ? "#FFFFFF"
+                          : "#000000",
+                      }}
+                      className="text-3xl font-medium"
+                    >
+                      {topic.title}
+                    </Text>
+                  </View>
+
+                  <Divider
+                    style={{
+                      backgroundColor: isDarkColor(handbook?.color)
+                        ? "#FFFFFF70"
+                        : "#00000070",
+                    }}
+                    className="mt-3 mb-2"
+                  />
+
+                  <View>
+                    {topic.sections.map((section, index) => (
+                      <View
+                        key={index}
+                        style={{
+                          flexDirection: "row",
+                          marginBottom: 2,
+                          paddingLeft: 8,
+                          paddingRight: 8,
+                        }}
+                      >
                         <Text
-                          key={section._id}
+                          className="text-lg"
+                          style={{
+                            marginRight: 6,
+                            color: isDarkColor(handbook?.color as string)
+                              ? "#FFFFFF"
+                              : "#000000",
+                            opacity: 0.9,
+                          }}
+                        >
+                          --
+                        </Text>
+                        <Text
+                          className="text-lg"
                           style={{
                             color: isDarkColor(handbook?.color as string)
-                              ? "#FFFFFF90"
-                              : "#00000090",
+                              ? "#FFFFFF"
+                              : "#000000",
+                            opacity: 0.9,
                           }}
-                          numberOfLines={1}
                         >
-                          --{"\t"}
                           {section.title}
                         </Text>
-                      ))}
-                    </View>
-                  </>
-                )}
+                      </View>
+                    ))}
+                  </View>
+                </View>
               </View>
-            </Link>
-          ))}
+            </Pressable>
+          </Link>
+        ))}
       </ScrollView>
     </View>
   );
