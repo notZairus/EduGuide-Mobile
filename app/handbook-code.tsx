@@ -52,10 +52,10 @@ const HandbookCodePage = () => {
         render: () => (
           <Toast action="error">
             <ToastTitle className="text-red-500">
-              Invalid handbook code.
+              {e.response?.data?.message || "Invalid handbook code."}
             </ToastTitle>
             <ToastDescription>
-              Please check the code and try again.
+              {process.env.EXPO_PUBLIC_API_URL}
             </ToastDescription>
           </Toast>
         ),
