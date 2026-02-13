@@ -4,7 +4,7 @@
     "slug": "eduguide_plus",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/eg_logo.png",
+    "icon": "./assets/images/adaptive-icon.png",
     "scheme": "eduguideplus",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -14,9 +14,9 @@
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#142e67",
-        "foregroundImage": "./assets/images/eg_logo.png",
-        "backgroundImage": "./assets/images/eg_logo.png",
-        "monochromeImage": "./assets/images/eg_logo.png"
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundImage": "./assets/images/adaptive-icon.png",
+        "monochromeImage": "./assets/images/adaptive-icon.png"
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
@@ -24,7 +24,7 @@
     },
     "web": {
       "output": "static",
-      "favicon": "./assets/images/eg_logo.png",
+      "favicon": "./assets/images/adaptive-icon.png",
       "bundler": "metro"
     },
     "plugins": [
@@ -33,8 +33,8 @@
         "expo-splash-screen",
         {
           "backgroundColor": "#142e67",
-          "image": "./assets/images/eg_logo.png",
-          "imageWidth": 300
+          "image": "./assets/images/splash-icon-dark.png",
+          "imageWidth": 500
         }
       ]
     ],
