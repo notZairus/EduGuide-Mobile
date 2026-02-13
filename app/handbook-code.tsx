@@ -20,9 +20,7 @@ const HandbookCodePage = () => {
 
   const handleSubmit = async () => {
     try {
-      const res = await api.post(`/handbooks/code/${handbookCode}`, {
-        code: handbookCode,
-      });
+      const res = await api.get(`/handbooks/code/${handbookCode}`);
 
       if (res.status === 200) {
         setTimeout(() => {
@@ -51,11 +49,11 @@ const HandbookCodePage = () => {
         duration: 3000,
         render: () => (
           <Toast action="error">
-            <ToastTitle className="text-red-500">
-              {e.response?.data?.message || "Invalid handbook code."}
-            </ToastTitle>
+            <ToastTitle className="text-red-500">Error</ToastTitle>
             <ToastDescription>
               {process.env.EXPO_PUBLIC_API_URL}
+              {"\n"}
+              {JSON.stringify(e)}
             </ToastDescription>
           </Toast>
         ),
