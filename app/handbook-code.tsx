@@ -9,20 +9,19 @@ import { useHandbook } from "@/hooks/use-handbook";
 import { api } from "@/utils/api";
 import { navigate } from "expo-router/build/global-state/routing";
 import { StatusBar } from "expo-status-bar";
-import React from "react";
+import React, { useState } from "react";
 import { Image, Text, TextInput, View } from "react-native";
 import "../global.css";
 
 const HandbookCodePage = () => {
   const [handbookCode, setHandbookCode] = React.useState("");
   const { setHandbook } = useHandbook();
+  const [url, setUrl] = useState("");
   const toast = useToast();
 
   const handleSubmit = async () => {
     try {
-      const res = await api.post(`/handbooks/code/${handbookCode}`, {
-        code: handbookCode,
-      });
+      const res = await api.get(`/handbooks/code/${handbookCode}`);
 
       if (res.status === 200) {
         setTimeout(() => {
@@ -51,11 +50,9 @@ const HandbookCodePage = () => {
         duration: 3000,
         render: () => (
           <Toast action="error">
-            <ToastTitle className="text-red-500">
-              Invalid handbook code.
-            </ToastTitle>
+            <ToastTitle className="text-red-500">Error</ToastTitle>
             <ToastDescription>
-              Please check the code and try again.
+              Invalid handbook code. Please try again.
             </ToastDescription>
           </Toast>
         ),

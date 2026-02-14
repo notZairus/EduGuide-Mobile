@@ -40,7 +40,7 @@ declare global {
     _id: string;
     title: string;
     order: number;
-    content: unknown;
+    content: string;
     medias: Media[];
   }
 }

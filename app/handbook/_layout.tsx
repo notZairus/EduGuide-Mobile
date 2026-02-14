@@ -1,5 +1,4 @@
 import { useHandbook } from "@/hooks/use-handbook";
-import { isDarkColor } from "@/utils/helper";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Tabs } from "expo-router";
 import { StatusBar } from "expo-status-bar";
@@ -16,16 +15,12 @@ const MainLayout = () => {
           animation: "fade",
           headerShown: true,
           tabBarStyle: {
-            backgroundColor: handbook?.color,
+            backgroundColor: "#FFFFFF",
             height: 72,
             paddingTop: 8,
           },
-          tabBarActiveTintColor: isDarkColor(handbook?.color as string)
-            ? "#fff"
-            : "#000",
-          tabBarInactiveTintColor: isDarkColor(handbook?.color as string)
-            ? "rgba(255, 255, 255, 0.5)"
-            : "rgba(0, 0, 0, 0.5)",
+          tabBarActiveTintColor: handbook?.color,
+          tabBarInactiveTintColor: handbook?.color,
         }}
       >
         <Tabs.Screen
@@ -37,20 +32,25 @@ const MainLayout = () => {
               <Ionicons
                 name={focused ? "document-text" : "document-text-outline"}
                 size={size}
-                color={
-                  focused
-                    ? isDarkColor(handbook?.color as string)
-                      ? "#fff"
-                      : "#000"
-                    : isDarkColor(handbook?.color as string)
-                      ? "rgba(255, 255, 255, 0.5)"
-                      : "rgba(0, 0, 0, 0.5)"
-                }
+                color={focused ? handbook?.color : handbook?.color + "90"}
               />
             ),
           }}
         />
-        <Tabs.Screen name="settings" options={{ headerShown: false }} />
+        <Tabs.Screen
+          name="settings"
+          options={{
+            title: "Settings",
+            headerShown: false,
+            tabBarIcon: ({ focused, size = 24 }) => (
+              <Ionicons
+                name={focused ? "settings" : "settings-outline"}
+                size={size}
+                color={focused ? handbook?.color : handbook?.color + "90"}
+              />
+            ),
+          }}
+        />
       </Tabs>
     </>
   );

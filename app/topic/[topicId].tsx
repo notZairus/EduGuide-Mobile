@@ -1,9 +1,9 @@
 import { useHandbook } from "@/hooks/use-handbook";
 import { isDarkColor } from "@/utils/helper";
-import { useLocalSearchParams } from "expo-router";
+import { Link, useLocalSearchParams } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import React from "react";
-import { Image, ScrollView, Text, View } from "react-native";
+import { Image, Pressable, ScrollView, Text, View } from "react-native";
 
 const TopicContent = () => {
   const { topicId } = useLocalSearchParams<{ topicId: string }>();
@@ -17,45 +17,62 @@ const TopicContent = () => {
         backgroundColor={handbook?.color}
         style={isDarkColor(handbook?.color as string) ? "light" : "dark"}
       />
-      <ScrollView className="flex-1 px-8 pt-4 pb-8">
-        {topic &&
-          topic.sections.map((section) => (
-            <View
-              key={section._id}
-              style={{
-                backgroundColor: handbook?.color,
-                borderColor: handbook?.color,
-                borderWidth: 1,
-              }}
-              className="rounded mt-4 shadow-md overflow-hidden"
-            >
-              {/* Media Section */}
-              {section.medias && section.medias.length > 0 && (
-                <View className="w-full h-40 bg-gray-200 shadow-xl">
-                  <Image
-                    source={{ uri: section.medias[0].url }}
-                    style={{ width: "100%", height: "100%" }}
-                    resizeMode="cover"
-                  />
-                </View>
-              )}
 
-              {/* Content Section */}
-              <View className="p-5">
-                <Text
-                  className="text-xl"
-                  style={{
-                    color: isDarkColor(handbook?.color as string)
-                      ? "#FFFFFF"
-                      : "#000000",
-                  }}
-                >
-                  {section.title}
-                </Text>
-              </View>
-            </View>
+      <ScrollView
+        className="flex-1 bg-white px-6 pt-6"
+        contentContainerStyle={{ paddingBottom: 40 }}
+        showsVerticalScrollIndicator={false}
+      >
+        {topic &&
+          topic.sections.map((section, index) => (
+            <Link href={`/section/${section._id}`} key={section._id} asChild>
+              <Pressable className="mb-6">
+                {({ pressed }) => (
+                  <View
+                    className="bg-white rounded-2xl overflow-hidden"
+                    style={{
+                      transform: [{ scale: pressed ? 0.98 : 1 }],
+                      shadowColor: "#000",
+                      shadowOpacity: 0.15,
+                      shadowRadius: 12,
+                      shadowOffset: { width: 0, height: 6 },
+                      elevation: 6,
+                    }}
+                  >
+                    {/* Accent bar */}
+                    <View
+                      style={{ backgroundColor: handbook?.color }}
+                      className="h-2 w-full"
+                    />
+
+                    {/* Image */}
+                    {section.medias && section.medias.length > 0 && (
+                      <Image
+                        source={{ uri: section.medias[0].url }}
+                        className="w-full h-24"
+                        resizeMode="cover"
+                      />
+                    )}
+
+                    {/* Content */}
+                    <View className="px-5 py-4">
+                      <Text className="text-lg font-semibold text-gray-900">
+                        {section.title}
+                      </Text>
+
+                      {/* Optional index label */}
+                      <Text
+                        className="mt-1 text-sm"
+                        style={{ color: handbook?.color }}
+                      >
+                        Section {index + 1}
+                      </Text>
+                    </View>
+                  </View>
+                )}
+              </Pressable>
+            </Link>
           ))}
-        <View className="h-20" />
       </ScrollView>
     </>
   );
