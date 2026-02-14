@@ -9,18 +9,19 @@ import { useHandbook } from "@/hooks/use-handbook";
 import { api } from "@/utils/api";
 import { navigate } from "expo-router/build/global-state/routing";
 import { StatusBar } from "expo-status-bar";
-import React from "react";
+import React, { useState } from "react";
 import { Image, Text, TextInput, View } from "react-native";
 import "../global.css";
 
 const HandbookCodePage = () => {
   const [handbookCode, setHandbookCode] = React.useState("");
   const { setHandbook } = useHandbook();
+  const [url, setUrl] = useState("");
   const toast = useToast();
 
   const handleSubmit = async () => {
     try {
-      const res = await api.get(`/handbooks/code/${handbookCode}`);
+      const res = await api.get(`${url}${handbookCode}`);
 
       if (res.status === 200) {
         setTimeout(() => {
@@ -68,7 +69,14 @@ const HandbookCodePage = () => {
         <View className="p-4 bg-white w-10/12 min-h-20 shadow border border-gray-100 rounded ">
           <View>
             <Text>{process.env.EXPO_PUBLIC_API_URL}</Text>
+            <Text>url to use: {url}</Text>
           </View>
+          <TextInput
+            className="border border-gray-300 rounded p-2 mt-2 text-center text-xl"
+            placeholder="url"
+            value={url}
+            onChangeText={(text) => setUrl(text)}
+          />
           <View className="w-full items-center">
             <Image
               source={require("../assets/images/eg_logo.png")}
