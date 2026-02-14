@@ -21,7 +21,7 @@ const HandbookCodePage = () => {
 
   const handleSubmit = async () => {
     try {
-      const res = await api.get(`${url}${handbookCode}`);
+      const res = await api.get(`/handbooks/code/${handbookCode}`);
 
       if (res.status === 200) {
         setTimeout(() => {
@@ -52,9 +52,7 @@ const HandbookCodePage = () => {
           <Toast action="error">
             <ToastTitle className="text-red-500">Error</ToastTitle>
             <ToastDescription>
-              {process.env.EXPO_PUBLIC_API_URL}
-              {"\n"}
-              {JSON.stringify(e)}
+              Invalid handbook code. Please try again.
             </ToastDescription>
           </Toast>
         ),
@@ -67,16 +65,6 @@ const HandbookCodePage = () => {
       <StatusBar backgroundColor="#142e67" />
       <View className="flex-1 gap-8 bg-[#142e67] items-center justify-center">
         <View className="p-4 bg-white w-10/12 min-h-20 shadow border border-gray-100 rounded ">
-          <View>
-            <Text>{process.env.EXPO_PUBLIC_API_URL}</Text>
-            <Text>url to use: {url}</Text>
-          </View>
-          <TextInput
-            className="border border-gray-300 rounded p-2 mt-2 text-center text-xl"
-            placeholder="url"
-            value={url}
-            onChangeText={(text) => setUrl(text)}
-          />
           <View className="w-full items-center">
             <Image
               source={require("../assets/images/eg_logo.png")}
