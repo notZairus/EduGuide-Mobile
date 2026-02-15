@@ -17,7 +17,6 @@ const TopicLayout = () => {
     <Stack
       screenOptions={{
         animation: "slide_from_right",
-        headerShown: true,
         title: topic?.title,
         headerStyle: { backgroundColor: handbook?.color },
         headerTintColor: isDarkColor(handbook?.color as string)

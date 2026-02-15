@@ -9,14 +9,13 @@ import { useHandbook } from "@/hooks/use-handbook";
 import { api } from "@/utils/api";
 import { navigate } from "expo-router/build/global-state/routing";
 import { StatusBar } from "expo-status-bar";
-import React, { useState } from "react";
+import React from "react";
 import { Image, Text, TextInput, View } from "react-native";
 import "../global.css";
 
 const HandbookCodePage = () => {
   const [handbookCode, setHandbookCode] = React.useState("");
   const { setHandbook } = useHandbook();
-  const [url, setUrl] = useState("");
   const toast = useToast();
 
   const handleSubmit = async () => {

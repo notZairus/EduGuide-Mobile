@@ -13,7 +13,7 @@ const MainLayout = () => {
       <Tabs
         screenOptions={{
           animation: "fade",
-          headerShown: true,
+          headerShown: false,
           tabBarStyle: {
             backgroundColor: "#FFFFFF",
             height: 72,

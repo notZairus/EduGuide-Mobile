@@ -16,7 +16,6 @@ const SectionLayout = () => {
     <Stack
       screenOptions={{
         animation: "slide_from_right",
-        headerShown: true,
         title: section?.title,
         headerStyle: { backgroundColor: handbook?.color },
         headerTintColor: isDarkColor(handbook?.color as string)
