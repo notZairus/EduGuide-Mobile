@@ -25,7 +25,7 @@ const HandbookCodePage = () => {
       if (res.status === 200) {
         setTimeout(() => {
           setHandbook(res.data);
-          navigate("/handbook/content");
+          navigate("/handbook");
         }, 3000);
 
         toast.show({

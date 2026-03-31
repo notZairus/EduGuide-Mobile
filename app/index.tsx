@@ -12,7 +12,7 @@ const IndexPage = () => {
     AsyncStorage.getItem("handbook").then((handbook) => {
       if (handbook) {
         setHandbook(JSON.parse(handbook));
-        navigate("/handbook/content");
+        navigate("/handbook");
       } else {
         navigate("/handbook-code");
       }

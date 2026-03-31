@@ -15,13 +15,16 @@ const SectionLayout = () => {
   return (
     <Stack
       screenOptions={{
-        animation: "slide_from_right",
         title: section?.title,
+        animation: "ios_from_right",
+        fullScreenGestureEnabled: true,
+        gestureEnabled: true,
         headerStyle: { backgroundColor: handbook?.color },
         headerTintColor: isDarkColor(handbook?.color as string)
           ? "#FFFFFF"
           : "#000000",
         headerBackVisible: true,
+        headerShown: false,
       }}
     />
   );

@@ -16,13 +16,16 @@ const TopicLayout = () => {
   return (
     <Stack
       screenOptions={{
-        animation: "slide_from_right",
+        animation: "ios_from_right",
+        fullScreenGestureEnabled: true,
+        gestureEnabled: true,
         title: topic?.title,
         headerStyle: { backgroundColor: handbook?.color },
         headerTintColor: isDarkColor(handbook?.color as string)
           ? "#FFFFFF"
           : "#000000",
         headerBackVisible: true,
+        headerShown: false,
       }}
     />
   );

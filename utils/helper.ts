@@ -1,3 +1,5 @@
+import * as Network from "expo-network";
+
 export function isDarkColor(hex: string = "#FFFFFF"): boolean {
   const hexColor = hex.replace("#", "");
   const r = parseInt(hexColor.substring(0, 2), 16);
@@ -35,4 +37,14 @@ export function toRoman(num: number) {
   }
 
   return result;
+}
+
+export async function hasInternet() {
+  const state = await Network.getNetworkStateAsync();
+
+  if (state.isConnected && state.isInternetReachable) {
+    return true;
+  }
+
+  return false;
 }

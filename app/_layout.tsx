@@ -1,3 +1,4 @@
+import { AuthenticatedUserProvider } from "@/components/AuthenticatedUserProvider";
 import { HandbookProvider } from "@/components/HandbookProvider";
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 import "@/global.css";
@@ -20,36 +21,40 @@ const RootLayoutNav = () => {
       <Stack
         screenOptions={{
           headerShown: false,
-          animation: "slide_from_right",
+          animation: "ios_from_right",
+          fullScreenGestureEnabled: true,
+          gestureEnabled: true,
         }}
       >
         <Stack.Screen name="index" />
         <Stack.Screen
           name="handbook-code"
           options={{
-            animation: "fade", // fade into handbook code
-            headerShown: false,
+            animation: "fade",
           }}
         />
         <Stack.Screen
-          name="handbook"
+          name="register"
           options={{
-            animation: "slide_from_bottom", // slide up into handbook
-            headerShown: false,
+            animation: "slide_from_right",
           }}
         />
         <Stack.Screen
-          name="topic"
+          name="login"
           options={{
-            animation: "slide_from_right", // slide in topic detail
-            headerShown: false,
+            animation: "slide_from_right",
           }}
         />
         <Stack.Screen
-          name="section"
+          name="forgot-password"
           options={{
-            animation: "slide_from_right", // slide in topic detail
-            headerShown: false,
+            animation: "slide_from_right",
+          }}
+        />
+        <Stack.Screen
+          name="(tabs)"
+          options={{
+            animation: "slide_from_bottom",
           }}
         />
       </Stack>
@@ -61,9 +66,11 @@ const RootLayout = () => {
   return (
     <GluestackUIProvider mode="dark">
       <ToastProvider>
-        <HandbookProvider>
-          <RootLayoutNav />
-        </HandbookProvider>
+        <AuthenticatedUserProvider>
+          <HandbookProvider>
+            <RootLayoutNav />
+          </HandbookProvider>
+        </AuthenticatedUserProvider>
       </ToastProvider>
     </GluestackUIProvider>
   );

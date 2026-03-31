@@ -2,17 +2,18 @@ import { Button, ButtonText } from "@/components/ui/button";
 import { Divider } from "@/components/ui/divider";
 import { Input, InputField } from "@/components/ui/input";
 import { useHandbook } from "@/hooks/use-handbook";
-import { toRoman } from "@/utils/helper";
-import { Link } from "expo-router";
-import React, { useEffect, useState } from "react";
+import { api } from "@/utils/api";
+import { hasInternet, toRoman } from "@/utils/helper";
+import { Link, useFocusEffect } from "expo-router";
+import React, { useCallback, useEffect, useState } from "react";
 import { Image, Pressable, ScrollView, Text, View } from "react-native";
 
 type TopicWithImage = {
   firstImage: string | null;
 } & Topic;
 
-const Main = () => {
-  const { handbook } = useHandbook();
+const Handbook = () => {
+  const { handbook, setHandbook } = useHandbook();
   const [topicsToRender, setTopicsToRender] = useState<
     (TopicWithImage | Topic)[] | null
   >(null);
@@ -46,6 +47,37 @@ const Main = () => {
 
     setTopicsToRender(topicsWithSectionImage);
   }, [handbook]);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (!handbook?.code) return;
+
+      let isActive = true;
+      let timeoutId: ReturnType<typeof setTimeout> | null = null;
+
+      const updateHandbook = async () => {
+        const isOnline = await hasInternet();
+        if (!isOnline) return;
+
+        console.log("Checking for handbook updates...");
+
+        const res = await api.get(`/handbooks/code/${handbook.code}`);
+
+        if (res.status === 200 && isActive) {
+          timeoutId = setTimeout(() => {
+            if (isActive) setHandbook(res.data);
+          }, 3000);
+        }
+      };
+
+      updateHandbook();
+
+      return () => {
+        isActive = false;
+        if (timeoutId) clearTimeout(timeoutId);
+      };
+    }, [handbook?.code, setHandbook]),
+  );
 
   return (
     <View className="flex-1 bg-white pt-6">
@@ -157,4 +189,4 @@ const Main = () => {
   );
 };
 
-export default Main;
+export default Handbook;
