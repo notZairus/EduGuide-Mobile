@@ -14,37 +14,47 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { z } from "zod";
 
-export const mobileRegisterSchema = z.object({
-  email: z
-    .string()
-    .trim()
-    .toLowerCase()
-    .min(8, "Email must be at least 8 characters long")
-    .regex(/^\S+@\S+\.\S+$/, "Please use a valid email address"),
+export const mobileRegisterSchema = z
+  .object({
+    email: z
+      .string()
+      .trim()
+      .toLowerCase()
+      .min(8, "Email must be at least 8 characters long")
+      .regex(/^\S+@\S+\.\S+$/, "Please use a valid email address"),
 
-  password: z
-    .string()
-    .trim()
-    .min(8, "Password must be at least 8 characters")
-    .max(32, "Password must be at most 32 characters")
-    .regex(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[^A-Za-z0-9]).+$/,
-      "Password must include at least one lowercase letter, one uppercase letter, and one symbol",
-    ),
+    password: z
+      .string()
+      .trim()
+      .min(8, "Password must be at least 8 characters")
+      .max(32, "Password must be at most 32 characters")
+      .regex(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*[^A-Za-z0-9]).+$/,
+        "Password must include at least one lowercase letter, one uppercase letter, and one symbol",
+      ),
 
-  firstName: z
-    .string()
-    .trim()
-    .min(2, "First name must be at least 2 characters"),
+    confirmPassword: z.string().trim().min(1, "Please confirm your password"),
 
-  middleName: z.string().trim().optional(),
+    firstName: z
+      .string()
+      .trim()
+      .min(2, "First name must be at least 2 characters"),
 
-  lastName: z.string().trim().min(2, "Last name must be at least 2 characters"),
+    middleName: z.string().trim().optional(),
 
-  role: z.enum(["student", "instructor"]),
+    lastName: z
+      .string()
+      .trim()
+      .min(2, "Last name must be at least 2 characters"),
 
-  handbookId: z.string().optional(),
-});
+    role: z.enum(["student", "instructor"]),
+
+    handbookId: z.string().optional(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
 
 type RegisterFormData = z.infer<typeof mobileRegisterSchema>;
 
@@ -57,6 +67,7 @@ const RegisterPage = () => {
   const [formData, setFormData] = useState<RegisterFormData>({
     email: "",
     password: "",
+    confirmPassword: "",
     firstName: "",
     middleName: "",
     lastName: "",
@@ -77,6 +88,7 @@ const RegisterPage = () => {
     return (
       formData.email.trim().length > 0 &&
       formData.password.trim().length > 0 &&
+      formData.confirmPassword.trim().length > 0 &&
       formData.firstName.trim().length > 0 &&
       formData.lastName.trim().length > 0
     );
@@ -114,7 +126,9 @@ const RegisterPage = () => {
     setIsSubmitting(true);
 
     try {
-      await api.post("/mobile-auth/validate-registration", parsed.data);
+      const { confirmPassword: _confirmPassword, ...registerPayload } =
+        parsed.data;
+      await api.post("/mobile-auth/validate-registration", registerPayload);
 
       setVerificationCode("");
       setVerificationMessage("");
@@ -288,6 +302,13 @@ const RegisterPage = () => {
             label: "Password",
             field: "password",
             placeholder: "Enter password",
+            secureTextEntry: true,
+          })}
+
+          {renderInput({
+            label: "Confirm Password",
+            field: "confirmPassword",
+            placeholder: "Re-enter password",
             secureTextEntry: true,
           })}
 

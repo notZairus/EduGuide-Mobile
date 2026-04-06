@@ -17,12 +17,43 @@ const Handbook = () => {
   const [topicsToRender, setTopicsToRender] = useState<
     (TopicWithImage | Topic)[] | null
   >(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [appliedSearchQuery, setAppliedSearchQuery] = useState("");
 
   useEffect(() => {
     const filteredTopics =
       handbook?.topics.filter((t) => t.sections.length > 0) || [];
 
-    const topicsWithSectionImage = filteredTopics.map((t) => {
+    const normalizedQuery = appliedSearchQuery.trim().toLowerCase();
+
+    const matchedTopics =
+      normalizedQuery.length === 0
+        ? filteredTopics
+        : filteredTopics
+            .map((topic) => {
+              const topicTitle = topic.title.toLowerCase();
+              const matchesTopicTitle = topicTitle.includes(normalizedQuery);
+
+              if (matchesTopicTitle) {
+                return topic;
+              }
+
+              const matchedSections = topic.sections.filter((section) =>
+                (section.title || "").toLowerCase().includes(normalizedQuery),
+              );
+
+              if (matchedSections.length === 0) {
+                return null;
+              }
+
+              return {
+                ...topic,
+                sections: matchedSections,
+              };
+            })
+            .filter((topic): topic is Topic => topic !== null);
+
+    const topicsWithSectionImage = matchedTopics.map((t) => {
       let firstImage: string | null = null;
 
       for (const section of t.sections) {
@@ -46,7 +77,7 @@ const Handbook = () => {
     });
 
     setTopicsToRender(topicsWithSectionImage);
-  }, [handbook]);
+  }, [handbook, appliedSearchQuery]);
 
   useFocusEffect(
     useCallback(() => {
@@ -103,16 +134,27 @@ const Handbook = () => {
         <View className="mt-6 flex-row items-center">
           <Input
             size="lg"
-            className="flex-1 bg-white rounded-xl"
+            className="flex-1 color-black bg-white rounded-xl"
             style={{ borderColor: handbook?.color }}
           >
-            <InputField placeholder="Search topics..." />
+            <InputField
+              className="color-black"
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+              onSubmitEditing={() => {
+                setAppliedSearchQuery(searchQuery);
+              }}
+              placeholder="Search topics..."
+            />
           </Input>
 
           <Button
             size="lg"
             className="ml-3 rounded-xl"
             style={{ backgroundColor: handbook?.color }}
+            onPress={() => {
+              setAppliedSearchQuery(searchQuery);
+            }}
           >
             <ButtonText style={{ color: "#fff" }}>Search</ButtonText>
           </Button>
@@ -184,6 +226,14 @@ const Handbook = () => {
             </Pressable>
           </Link>
         ))}
+
+        {topicsToRender && topicsToRender.length === 0 && (
+          <View className="py-12 items-center">
+            <Text className="text-base text-gray-500">
+              No topics found for your search.
+            </Text>
+          </View>
+        )}
       </ScrollView>
     </View>
   );

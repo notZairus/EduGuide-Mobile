@@ -652,7 +652,7 @@ const TopicQuiz = () => {
                 })}
               </View>
 
-              <Pressable onPress={logQuizResult} className="mt-6">
+              {/* <Pressable onPress={logQuizResult} className="mt-6">
                 {({ pressed }) => (
                   <View
                     className="rounded-xl px-4 py-3 border"
@@ -669,7 +669,7 @@ const TopicQuiz = () => {
                     </Text>
                   </View>
                 )}
-              </Pressable>
+              </Pressable> */}
 
               <View className="flex-row gap-3 mt-6">
                 <Pressable onPress={resetQuiz} className="flex-1">
