@@ -91,6 +91,7 @@ const LoginPage = () => {
       const res = await api.post("/mobile-auth/login", parsed.data);
       const data = res.data as {
         message?: string;
+        accessToken?: string;
         user?: {
           id?: string;
           firstName?: string;
@@ -103,6 +104,7 @@ const LoginPage = () => {
       const formattedUser = data.user
         ? {
             ...data.user,
+            accessToken: data.accessToken,
             email: parsed.data.email,
             name: [data.user.firstName, data.user.lastName]
               .filter(Boolean)
@@ -110,6 +112,7 @@ const LoginPage = () => {
               .trim(),
           }
         : {
+            accessToken: data.accessToken,
             email: parsed.data.email,
             name: parsed.data.email,
           };

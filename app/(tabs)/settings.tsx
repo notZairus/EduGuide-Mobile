@@ -7,8 +7,9 @@ import { Pressable, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const SettingsPage = () => {
-  const { setAuthenticatedUser } = useAuthenticatedUser();
-  const { setHandbook } = useHandbook();
+  const { authenticatedUser, setAuthenticatedUser } = useAuthenticatedUser();
+  const { handbook, setHandbook } = useHandbook();
+  const accent = handbook?.color || "#1D4ED8";
 
   const handleChangeHandbook = () => {
     setAuthenticatedUser(null);
@@ -55,6 +56,20 @@ const SettingsPage = () => {
               Change handbook
             </ButtonText>
           </Button>
+
+          {authenticatedUser && (
+            <Button
+              className="mt-3 rounded-xl"
+              style={{ backgroundColor: accent }}
+              onPress={() => {
+                router.push("/change-password");
+              }}
+            >
+              <ButtonText className="text-white font-semibold">
+                Change password
+              </ButtonText>
+            </Button>
+          )}
 
           <Pressable
             className="mt-3"

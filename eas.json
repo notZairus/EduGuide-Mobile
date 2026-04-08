@@ -3,7 +3,7 @@
     "preview": {
       "distribution": "internal",
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://eduguide-2296i.ondigitalocean.app"
+        "EXPO_PUBLIC_API_URL": "https://eduguide-v5g8w.ondigitalocean.app"
       }
     }
   }

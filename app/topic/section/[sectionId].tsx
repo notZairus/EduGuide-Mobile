@@ -22,6 +22,13 @@ const SectionContent = () => {
   const allSections = handbook?.topics.flatMap((topic) => topic.sections) || [];
 
   const section = allSections.find((s) => s._id === sectionId);
+  const sectionContent =
+    typeof section?.content === "string" ? section.content : "";
+  const hasContent =
+    sectionContent
+      .replace(/<[^>]*>/g, "")
+      .replace(/&nbsp;/g, " ")
+      .trim().length > 0;
 
   return (
     <View className="flex-1">
@@ -121,7 +128,7 @@ const SectionContent = () => {
           </ScrollView>
         )}
 
-        {section?.content && (
+        {section && (
           <View>
             <View
               style={{
@@ -190,74 +197,80 @@ const SectionContent = () => {
                   backgroundColor: "#FFFFFF",
                 }}
               >
-                <RenderHTML
-                  contentWidth={width - 40}
-                  source={{ html: section?.content || "" }}
-                  baseStyle={{
-                    color: "#1a1a1a",
-                  }}
-                  tagsStyles={{
-                    p: {
-                      fontSize: 16,
-                      lineHeight: 26,
-                      marginBottom: 18,
-                      textAlign: "justify",
-                    },
-                    strong: {
-                      fontWeight: "700",
-                    },
-                    em: {
-                      fontStyle: "italic",
-                    },
-                    ul: {
-                      paddingLeft: 22,
-                      marginBottom: 16,
-                    },
-                    ol: {
-                      paddingLeft: 22,
-                      marginBottom: 16,
-                    },
-                    li: {
-                      fontSize: 17,
-                      lineHeight: 26,
-                      marginBottom: 8,
-                    },
-                    h1: {
-                      fontSize: 30,
-                      fontWeight: "700",
-                      marginBottom: 16,
-                      marginTop: 12,
-                    },
-                    h2: {
-                      fontSize: 26,
-                      fontWeight: "700",
-                      marginBottom: 14,
-                      marginTop: 10,
-                    },
-                    h3: {
-                      fontSize: 22,
-                      fontWeight: "600",
-                      marginBottom: 12,
-                      marginTop: 8,
-                    },
-                    h4: {
-                      fontSize: 20,
-                      fontWeight: "600",
-                      marginBottom: 10,
-                      marginTop: 6,
-                    },
-                    h5: {
-                      fontSize: 18,
-                      fontWeight: "600",
-                      marginBottom: 8,
-                    },
-                    h6: {
-                      fontSize: 16,
-                      fontWeight: "600",
-                      marginBottom: 6,
-                    },
-                  }}
-                />
+                {hasContent ? (
+                  <RenderHTML
+                    contentWidth={width - 40}
+                    source={{ html: sectionContent }}
+                    baseStyle={{
+                      color: "#1a1a1a",
+                    }}
+                    tagsStyles={{
+                      p: {
+                        fontSize: 16,
+                        lineHeight: 26,
+                        marginBottom: 18,
+                        textAlign: "justify",
+                      },
+                      strong: {
+                        fontWeight: "700",
+                      },
+                      em: {
+                        fontStyle: "italic",
+                      },
+                      ul: {
+                        paddingLeft: 22,
+                        marginBottom: 16,
+                      },
+                      ol: {
+                        paddingLeft: 22,
+                        marginBottom: 16,
+                      },
+                      li: {
+                        fontSize: 17,
+                        lineHeight: 26,
+                        marginBottom: 8,
+                      },
+                      h1: {
+                        fontSize: 30,
+                        fontWeight: "700",
+                        marginBottom: 16,
+                        marginTop: 12,
+                      },
+                      h2: {
+                        fontSize: 26,
+                        fontWeight: "700",
+                        marginBottom: 14,
+                        marginTop: 10,
+                      },
+                      h3: {
+                        fontSize: 22,
+                        fontWeight: "600",
+                        marginBottom: 12,
+                        marginTop: 8,
+                      },
+                      h4: {
+                        fontSize: 20,
+                        fontWeight: "600",
+                        marginBottom: 10,
+                        marginTop: 6,
+                      },
+                      h5: {
+                        fontSize: 18,
+                        fontWeight: "600",
+                        marginBottom: 8,
+                      },
+                      h6: {
+                        fontSize: 16,
+                        fontWeight: "600",
+                        marginBottom: 6,
+                      },
+                    }}
+                  />
+                ) : (
+                  <Text style={{ fontSize: 15, color: "#333" }}>
+                    No content available for this section.
+                  </Text>
+                )}
               </View>
             )}
 

@@ -2,6 +2,7 @@ import {
   AuthenticatedUserContext,
   type AuthenticatedUser,
 } from "@/contexts/authenticatedUserContext";
+import { api } from "@/utils/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect } from "react";
 
@@ -64,6 +65,17 @@ export const AuthenticatedUserProvider = ({
 
     saveAuthenticatedUserToStorage();
   }, [authenticatedUser, firstMount]);
+
+  useEffect(() => {
+    const accessToken = authenticatedUser?.accessToken;
+
+    if (accessToken) {
+      api.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+      return;
+    }
+
+    delete api.defaults.headers.common.Authorization;
+  }, [authenticatedUser]);
 
   return (
     <AuthenticatedUserContext.Provider
