@@ -1,4 +1,6 @@
 import { HandbookContext } from "@/contexts/handbookContext";
+import { api } from "@/utils/api";
+import { hasInternet } from "@/utils/helper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect } from "react";
 
@@ -49,6 +51,40 @@ export const HandbookProvider = ({
 
     saveHandbookToStorage();
   }, [handbook, firstMount]);
+
+  useEffect(() => {
+    if (!handbook?.code) return;
+
+    let isActive = true;
+    let isFetching = false;
+
+    const updateHandbook = async () => {
+      if (isFetching) return;
+      isFetching = true;
+
+      try {
+        const isOnline = await hasInternet();
+        if (!isOnline) return;
+
+        const res = await api.get(`/handbooks/code/${handbook.code}`);
+        if (res.status === 200 && isActive) {
+          setHandbook(res.data);
+        }
+      } catch (error) {
+        console.error("Error polling handbook updates:", error);
+      } finally {
+        isFetching = false;
+      }
+    };
+
+    updateHandbook();
+    const intervalId = setInterval(updateHandbook, 10000);
+
+    return () => {
+      isActive = false;
+      clearInterval(intervalId);
+    };
+  }, [handbook?.code]);
 
   return (
     <HandbookContext.Provider
